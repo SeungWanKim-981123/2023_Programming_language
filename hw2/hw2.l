@@ -17,28 +17,27 @@ int mark=0;//위에서 포함되지 않는 단어의 개수를 의미
 %}
 %%
 	/*규칙절 정의 시작*/
-#include|#define	{preprocessornum++;}
+#include.*\n{1}|#define.*\n{1}	{preprocessornum++;}
 \{	{leftcurlybracenum++;}
-\}	{rightcurlybracenum++;}
+\}\n{1}	{rightcurlybracenum++;}
 0[0-9]+	{octalnum++;}
 -[0-9]+	{negadecnum++;}//음수
-[0-9]+	{postdecnum++;}
+[0-9]+	{postdecnum++;}//양수
 \/{2}.*	{commentnum++;}
 \/\*(\n)*.*(\n)*\*\/	{commentnum++;}
-%[a-z]	{operatornum++;word++;}
 \+|-|\*|%	{operatornum++;}//산술연산자
 \|\||&&|!	{operatornum++;}//논리연산자
+%[a-z]	{operatornum++;word++;}
 ==|!=	{operatornum++;}//관계연산자
-\+\+|--	{operatornum++;}
-,	{operatornum++;}
-\*|&	{operatornum++;}
-\[[0-9]+\]	{mark+=3;}
+\+\+|--	{operatornum++;}//증감연산자
+,	{operatornum++;}//콤마연산자
+\*|&	{operatornum++;}//포인터연산자
 [a-zA-Z]*p[a-zA-Z]*p[a-zA-Z]*p[a-zA-Z]*	{word++;}
 [a-zA-Z]*p[a-zA-Z]*p[a-zA-Z]*	{wordcase1++;}
 e[a-zA-Z]*m	{wordcase2++;}
 =	{equalnum++;}
-[a-zA-Z]+	{word++;} 
-\n	;
+[a-zA-Z]+	{word++;}
+\n	{mark++;}
 .	{mark++;}
 %%
 int main()
